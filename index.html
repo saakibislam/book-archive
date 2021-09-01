@@ -11,6 +11,23 @@
 </head>
 
 <body>
+    <div class="container text-center mt-5">
+        <h1 class="display-2">Welcome to Open Library</h1>
+        <div class="input-group mt-5 w-50 mx-auto">
+            <input id="inputText" type="text" class="form-control" placeholder="Enter book name"
+                aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button onclick="loadBooks()" class="btn btn-outline-success" type="button"
+                id="button-addon2">Button</button>
+        </div>
+    </div>
+    <div id="showResults" class="container text-center my-3">
+
+    </div>
+    <div class="container">
+        <div id="booksContainer" class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+
+        </div>
+    </div>
 
     <!-- Custom JavaScript  -->
     <script src="js/app.js"></script>

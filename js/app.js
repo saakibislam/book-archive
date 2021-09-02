@@ -1,20 +1,31 @@
 const showResultsField = document.getElementById("showResults");
+const booksContainer = document.getElementById("booksContainer");
 
-// loading book details 
-const loadBooks = () => {
+// this is to clear books container for empty string, habijabi sting & before showing search results.
+const clearContainer = () => {
+    booksContainer.innerHTML = '';
+}
+
+// loading book data 
+const loadBooks = async () => {
     const inputTextField = document.getElementById("inputText");
     const inputText = inputTextField.value;
     inputTextField.value = '';
-
-    const url = `http://openlibrary.org/search.json?q=${inputText}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => displayBooks(data))
+    showResultsField.innerHTML = '';
+    if (inputText.length === 0) {
+        console.log("write something");
+        clearContainer();
+    } else {
+        const url = `http://openlibrary.org/search.json?q=${inputText}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        displayBooks(data);
+    }
 }
+
 // displaying books in cards
 const displayBooks = data => {
     // how many results found
-    showResultsField.innerHTML = '';
     const booksFound = data.num_found;
     const h1 = document.createElement('h1');
     h1.classList.add('text-center');
@@ -22,17 +33,16 @@ const displayBooks = data => {
     showResultsField.appendChild(h1);
     if (booksFound === 0) {
         alert("Please don't write habijabi");
+        clearContainer();
     } else {
         //forEach loop to set card values dynamically
         const books = data.docs;
         // console.log(books)
-        const booksContainer = document.getElementById("booksContainer");
-        booksContainer.innerHTML = '';
+        clearContainer();
 
         books.forEach(book => {
             // console.log(book.title)
             // console.log(book.subject);
-
             const bookTitle = book.title;
             const bookCover = book.cover_i;
             const subjects = book.subject;
@@ -40,21 +50,21 @@ const displayBooks = data => {
             const div = document.createElement('div');
             div.classList.add('col');
             div.innerHTML = `
-        <div onclick="loadBookDetail(${bookCover}, '${bookTitle}', '${subjects}')" class="card rounded">
-            <img src="https://covers.openlibrary.org/b/id/${bookCover}-M.jpg" class="card-img-top" style="height:380px" alt = "..." >
-            <div class="card-body">
-                <h5 class="card-title">${bookTitle}</h5>
-            </div >
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><small><b>Author</b>: ${book.author_name}</small></li>
-                <li class="list-group-item"><small><b>Publish Date</b>: ${book.publish_date}</small></li>
-                <li class="list-group-item"><small><b>Publisher</b>: ${book.publisher}</small></li>
-            </ul>
-            <div class="card-footer">
-                <small class="text-muted">First Published in ${book.first_publish_year}</small>
-            </div>
-        </div >
-    `;
+                <div onclick="loadBookDetail(${bookCover}, '${bookTitle}', '${subjects}')" class="card rounded">
+                    <img src="https://covers.openlibrary.org/b/id/${bookCover}-M.jpg" class="card-img-top" style="height:380px" alt = "..." >
+                    <div class="card-body">
+                        <h5 class="card-title">${bookTitle}</h5>
+                    </div >
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small><b>Author</b>: ${book.author_name}</small></li>
+                        <li class="list-group-item"><small><b>Publish Date</b>: ${book.publish_date}</small></li>
+                        <li class="list-group-item"><small><b>Publisher</b>: ${book.publisher}</small></li>
+                    </ul>
+                    <div class="card-footer">
+                        <small class="text-muted">First Published in ${book.first_publish_year}</small>
+                    </div>
+                </div >
+            `;
             booksContainer.appendChild(div);
         });
     }

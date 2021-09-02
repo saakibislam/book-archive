@@ -16,7 +16,7 @@ const loadBooks = async () => {
         console.log("write something");
         clearContainer();
     } else {
-        const url = `http://openlibrary.org/search.json?q=${inputText}`;
+        const url = `https://openlibrary.org/search.json?q=${inputText}`;
         const response = await fetch(url);
         const data = await response.json();
         displayBooks(data);
